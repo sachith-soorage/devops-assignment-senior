@@ -34,7 +34,7 @@ def root_route():
 @app.route("/healthz", methods=["GET"])
 @metrics.do_not_track()
 def healthz():
-    """Liveness/readiness probe target. Excluded from metrics to avoid noise."""
+    """Excluded from metrics to avoid noise."""
     return jsonify(status="ok"), 200
 
 

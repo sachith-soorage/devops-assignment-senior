@@ -59,5 +59,6 @@ spec:
             - name: tmp
               mountPath: /tmp
       volumes:
+        # Writable scratch space for gunicorn, since the root FS is set to readonly.
         - name: tmp
           emptyDir: {}
