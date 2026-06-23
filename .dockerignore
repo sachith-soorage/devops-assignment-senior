@@ -1,0 +1,12 @@
+.git
+.gitignore
+.github/
+k8s/
+__pycache__/
+*.py[cod]
+*.so
+.venv/
+venv/
+.DS_Store
+README.md
+LICENSE

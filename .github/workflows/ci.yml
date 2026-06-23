@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install flake8
+
+      - name: Lint
+        run: flake8 app.py --max-line-length=100
+
+      - name: Smoke test
+        run: |
+          gunicorn --bind 127.0.0.1:8000 app:app &
+          sleep 3
+          curl -fsS http://127.0.0.1:8000/healthz
+          curl -fsS http://127.0.0.1:8000/metrics | head -n 5
+
+      - name: Build image
+        run: docker build -t flask-app:${{ github.sha }} .
+
+      # Security bonus: report HIGH/CRITICAL CVEs in the image.
+      # exit-code 0 keeps this informational for the assignment; flip to 1 to gate merges.
+      - name: Scan image (Trivy)
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: flask-app:${{ github.sha }}
+          severity: HIGH,CRITICAL
+          exit-code: "0"
