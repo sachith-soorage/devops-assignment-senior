@@ -1,21 +1,13 @@
-# Senior Platform Engineer Assignment — Flask on Kubernetes
+# Tiqets Flask app on Kubernetes
 
 A simple Flask app, containerized and ready to run on local Kubernetes
-(Minikube or Docker Desktop), with CI and basic observability.
+(Minikube), with CI and basic observability.
 
-> Scope note: this is intentionally minimal and time-boxed (~2h), not a
+> Scope note: this is intentionally minimal and time-boxed POC, not a
 > production platform. See [Trade-offs](#trade-offs) for what I deliberately
 > left out and why.
 
 ## The app
-
-| Route       | Behavior                                          |
-|-------------|---------------------------------------------------|
-| `GET /`     | 302 redirect to `/sergei` or `/raditya` at random |
-| `GET /sergei`   | `Sergei Fixed It!`                            |
-| `GET /raditya`  | `Raditya Is Batman!`                          |
-| `GET /healthz`  | `{"status":"ok"}` — liveness/readiness probe  |
-| `GET /metrics`  | Prometheus metrics                            |
 
 Served by **gunicorn** (not the Flask dev server) in a slim, non-root container.
 
@@ -28,9 +20,6 @@ Served by **gunicorn** (not the Flask dev server) in a slim, non-root container.
 ## Build
 
 ```bash
-# Docker Desktop: builds straight into the cluster's image store.
-docker build -t flask-app:local .
-
 # Minikube: build inside Minikube's Docker daemon so the image is visible.
 eval $(minikube docker-env)
 docker build -t flask-app:local .

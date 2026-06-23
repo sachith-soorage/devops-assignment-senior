@@ -33,8 +33,7 @@ jobs:
       - name: Build image
         run: docker build -t flask-app:${{ github.sha }} .
 
-      # Security bonus: report HIGH/CRITICAL CVEs in the image.
-      # exit-code 0 keeps this informational for the assignment; flip to 1 to gate merges.
+      # exit-code 0 keeps this informational for the assignment
       - name: Scan image (Trivy)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
